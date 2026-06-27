@@ -1,0 +1,12 @@
+{
+  "name": "state-management-practice",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "run:redux": "node 01-redux-core/index.js"
+  },
+  "dependencies": {
+    "redux": "^4.2.1"
+  }
+}
