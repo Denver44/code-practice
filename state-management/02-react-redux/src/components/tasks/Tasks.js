@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import Collapsible from '../collapsible/Collapsible';
-import * as actions from '../../actions';
+import actions from '../../actions';
 import { toDisplayDateFormat } from '../../utils';
 
 export default function Tasks() {
