@@ -1,10 +1,15 @@
 import { useState } from 'react'
-import LayoutDemo from './01-layout-components/Demo.jsx'
+import SplitScreenDemo from './01-layout-components/01-split-screen/Demo.jsx'
+import ListDemo from './01-layout-components/02-list-patterns/Demo.jsx'
+import ModalDemo from './01-layout-components/03-modal/Demo.jsx'
 import ContainerDemo from './02-container-components/Demo.jsx'
 
-const chapters = [
-  { id: '01', label: 'Layout Components', component: LayoutDemo },
-  { id: '02', label: 'Container Components', component: ContainerDemo },
+// One entry per blog post, so a post links straight to its own demo.
+const posts = [
+  { id: 'layout-components-and-split-screen', label: 'Split Screen', component: SplitScreenDemo },
+  { id: 'list-component-patterns', label: 'List Patterns', component: ListDemo },
+  { id: 'modal-as-layout-component', label: 'Modal', component: ModalDemo },
+  { id: 'container-components', label: 'Container Components', component: ContainerDemo },
 ]
 
 const navStyle = {
@@ -50,8 +55,8 @@ const titleStyle = {
 }
 
 export default function App() {
-  const [active, setActive] = useState('01')
-  const current = chapters.find(c => c.id === active)
+  const [active, setActive] = useState(posts[0].id)
+  const current = posts.find(p => p.id === active)
   const Demo = current.component
 
   return (
@@ -60,19 +65,19 @@ export default function App() {
         <span style={{ color: '#7c3aed', fontWeight: '800', fontSize: '1rem', marginRight: '1rem', alignSelf: 'center' }}>
           Advanced React
         </span>
-        {chapters.map(ch => (
+        {posts.map((p, i) => (
           <button
-            key={ch.id}
-            style={active === ch.id ? btnActive : btnInactive}
-            onClick={() => setActive(ch.id)}
+            key={p.id}
+            style={active === p.id ? btnActive : btnInactive}
+            onClick={() => setActive(p.id)}
           >
-            {ch.id}. {ch.label}
+            {i + 1}. {p.label}
           </button>
         ))}
       </div>
 
       <div style={{ ...titleStyle }}>
-        Chapter {current.id} — {current.label}
+        {current.label}
       </div>
 
       <Demo />
