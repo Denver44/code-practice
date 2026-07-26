@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Web Security, v2 - Examples</title>
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      max-width: 720px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+      line-height: 1.5;
+    }
+    .examples {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin: 1.5rem 0;
+    }
+    button {
+      text-align: left;
+      padding: 0.75rem 1rem;
+      font-size: 0.95rem;
+      cursor: pointer;
+      border: 1px solid #999;
+      border-radius: 6px;
+      background: #f5f5f5;
+    }
+    button:hover {
+      background: #e8e8e8;
+    }
+    button.active {
+      background: #dbeafe;
+      border-color: #3b82f6;
+      font-weight: 600;
+    }
+    #description {
+      color: #444;
+      font-style: italic;
+    }
+    #output {
+      background: #111;
+      color: #0f0;
+      padding: 1rem;
+      border-radius: 6px;
+      white-space: pre-wrap;
+      word-break: break-word;
+      font-family: ui-monospace, monospace;
+      font-size: 0.85rem;
+      min-height: 4rem;
+      max-height: 60vh;
+      overflow-y: auto;
+    }
+    #dom-demo div {
+      border: 1px dashed #999;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+  <h1>Web Security, v2 - Examples</h1>
+  <p>Click a button to run that example. Output shows up below, no DevTools required (though DevTools console shows the same thing too).</p>
+
+  <div class="examples" id="example-buttons"></div>
+
+  <p id="description"></p>
+
+  <pre id="output">Click an example above to run it.</pre>
+
+  <div id="dom-demo">
+    <div id="safe-output"></div>
+    <div id="unsafe-output"></div>
+  </div>
+
+  <script>
+    const EXAMPLES = [
+      {
+        file: "1-document-cookie-append-quirk.js",
+        label: "1. document.cookie append quirk",
+        description: "Shows that document.cookie appends instead of overwriting.",
+      },
+      {
+        file: "2-allow-list-vs-deny-list.js",
+        label: "2. Allow list vs. deny list",
+        description: "A deny list missing an unexpected \"role\" field versus an allow list dropping it safely.",
+      },
+      {
+        file: "3-get-has-no-body.js",
+        label: "3. GET requests have no body",
+        description: "A GET request's query parameters sitting in plain text with no encryption possible, next to the same action sent as a POST body instead.",
+      },
+      {
+        file: "4-safe-sinks-vs-dangerous-sinks.js",
+        label: "4. Safe sinks vs. dangerous sinks",
+        description: "The same malicious string rendered through textContent and innerHTML side by side, one stays inert, one actually executes.",
+      },
+      {
+        file: "5-postmessage-origin-check.js",
+        label: "5. postMessage origin check",
+        description: "Simulates three incoming postMessage events against an allow list of one trusted origin, no second window needed.",
+      },
+    ];
+
+    const buttonsEl = document.getElementById("example-buttons");
+    const descriptionEl = document.getElementById("description");
+    const outputEl = document.getElementById("output");
+    const safeOutputEl = document.getElementById("safe-output");
+    const unsafeOutputEl = document.getElementById("unsafe-output");
+
+    let currentScriptEl = null;
+    const originalConsoleLog = console.log.bind(console);
+
+    function renderToOutput(args) {
+      const line = args
+        .map((a) => (typeof a === "string" ? a : JSON.stringify(a, null, 2)))
+        .join(" ");
+      outputEl.textContent += line + "\n";
+    }
+
+    console.log = function (...args) {
+      originalConsoleLog(...args);
+      renderToOutput(args);
+    };
+
+    function runExample(example) {
+      // Reset output and the DOM sandbox each run.
+      outputEl.textContent = "";
+      safeOutputEl.textContent = "";
+      unsafeOutputEl.innerHTML = "";
+
+      descriptionEl.textContent = example.description;
+
+      [...buttonsEl.children].forEach((btn) => btn.classList.remove("active"));
+      const activeBtn = [...buttonsEl.children].find((btn) => btn.dataset.file === example.file);
+      if (activeBtn) activeBtn.classList.add("active");
+
+      if (currentScriptEl) currentScriptEl.remove();
+
+      const script = document.createElement("script");
+      // Cache-bust so re-clicking the same example re-runs it cleanly.
+      script.src = `${example.file}?t=${Date.now()}`;
+      document.body.appendChild(script);
+      currentScriptEl = script;
+    }
+
+    EXAMPLES.forEach((example) => {
+      const btn = document.createElement("button");
+      btn.textContent = example.label;
+      btn.dataset.file = example.file;
+      btn.addEventListener("click", () => runExample(example));
+      buttonsEl.appendChild(btn);
+    });
+  </script>
+</body>
+</html>
