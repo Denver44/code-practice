@@ -1,6 +1,6 @@
 // My solution to Exercise 1 (coordinate three concurrent callbacks).
-// See 2-coordinating-concurrent-callbacks-exercise.js for the empty starter,
-// and 2-coordinating-concurrent-callbacks.js for the reference solution.
+// See exercise.js in this same folder for the empty starter,
+// and solution.js for the reference solution.
 
 function fakeFetchStat(name, cb) {
   const delay = 300 + Math.random() * 700;
@@ -15,19 +15,17 @@ function handleResponse(name, data) {
     return;
   }
 
-  responses[name] = { data, printed: false };
+  responses[name] = data;
 
-  order.every((key) => {
-    if (!responses[key]) return false;
-    else if (responses[key]?.printed) return true;
-    else {
-      console.log(responses[key].data);
-      responses[key].printed = true;
-      return true;
-    }
+  const reachedTheEnd = order.every((key) => {
+    if (!(key in responses)) return false;
+    if (responses[key] == false) return true;
+    console.log(responses[key]);
+    responses[key] = false;
+    return true;
   });
 
-  if (order.every((key) => responses[key])) console.log('All stats loaded');
+  if (reachedTheEnd) console.log('All stats loaded');
 }
 
 fakeFetchStat('inventory', handleResponse);
