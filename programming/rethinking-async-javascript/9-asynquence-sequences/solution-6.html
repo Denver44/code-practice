@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Solution 6: Arbitrary-Length Chain, With Asynquence</title>
+</head>
+<body>
+<h1>Solution 6: Arbitrary-Length Chain, With Asynquence</h1>
+<p>Same result as Exercise 4's map/reduce solution, but asynquence lets .seq() take multiple functions directly, so a second .map() replaces the reduce entirely. Open your browser's console (F12) to see the output.</p>
+
+<script src="https://unpkg.com/asynquence@0.10.2/asq.src.js"></script>
+<script>
+  function fakeFetchStat(name, cb) {
+    const delay = 300 + Math.random() * 700;
+    setTimeout(() => cb(`${name} data ready`), delay);
+  }
+
+  function getStat(name) {
+    return ASQ(function (done) {
+      fakeFetchStat(name, done);
+    });
+  }
+
+  function output(text) {
+    console.log(text);
+  }
+
+  const stats = ['inventory', 'shipping', 'payments', 'tax', 'insurance'];
+
+  // Step 1: turn the list into a list of sequences, same as exercise 4.
+  const sequences = stats.map(getStat);
+
+  // Step 2: turn each sequence into a function that prints it. Wrapping in a
+  // function defers the .val(output) call until asynquence actually reaches
+  // that step, which is what makes them run one after another instead of
+  // independently.
+  const printSteps = sequences.map((sq) => () => sq.val(output));
+
+  // Step 3: run that whole list of functions in order. No reduce needed,
+  // asynquence's .seq() runs multiple functions serially on its own.
+  ASQ()
+    .seq(...printSteps)
+    .val(() => output('All stats loaded'));
+</script>
+
+</body>
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Exercise 5: Promise Chain, With Asynquence</title>
+</head>
+<body>
+<h1>Exercise 5: Promise Chain, With Asynquence</h1>
+<p>Same as Exercise 3, but using Kyle Simpson's asynquence library instead of native promises. Open your browser's console (F12) to see the output.</p>
+
+<script src="https://unpkg.com/asynquence@0.10.2/asq.src.js"></script>
+<script>
+  function fakeFetchStat(name, cb) {
+    const delay = 300 + Math.random() * 700;
+    setTimeout(() => cb(`${name} data ready`), delay);
+  }
+
+  // getStat should wrap fakeFetchStat as a single-step sequence.
+  // Hint: ASQ(function (done) { ... })
+  function getStat(name) {
+    // what do we do here?
+  }
+
+  const inventorySeq = getStat('inventory');
+  const shippingSeq = getStat('shipping');
+  const paymentsSeq = getStat('payments');
+
+  function output(text) {
+    console.log(text);
+  }
+
+  // chain them together: .val(output) to print, .seq(nextSeq) to wait for
+  // the next one. inventory, then shipping, then payments, then "All stats
+  // loaded".
+</script>
+
+</body>
+</html>

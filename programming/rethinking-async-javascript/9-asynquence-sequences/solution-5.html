@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Solution 5: Promise Chain, With Asynquence</title>
+</head>
+<body>
+<h1>Solution 5: Promise Chain, With Asynquence</h1>
+<p>Same as Exercise 3's solution, using asynquence's .seq/.val steps instead of native .then(). Open your browser's console (F12) to see the output.</p>
+
+<script src="https://unpkg.com/asynquence@0.10.2/asq.src.js"></script>
+<script>
+  function fakeFetchStat(name, cb) {
+    const delay = 300 + Math.random() * 700;
+    setTimeout(() => cb(`${name} data ready`), delay);
+  }
+
+  // "Lifting" fakeFetchStat into a single-step sequence.
+  function getStat(name) {
+    return ASQ(function (done) {
+      fakeFetchStat(name, done);
+    });
+  }
+
+  function output(text) {
+    console.log(text);
+  }
+
+  const inventorySeq = getStat('inventory');
+  const shippingSeq = getStat('shipping');
+  const paymentsSeq = getStat('payments');
+
+  inventorySeq
+    .val(output)
+    .seq(shippingSeq)
+    .val(output)
+    .seq(paymentsSeq)
+    .val(output)
+    .val(() => output('All stats loaded'));
+</script>
+
+</body>
+</html>

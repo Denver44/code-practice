@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>Exercise 6: Arbitrary-Length Chain, With Asynquence</title>
+</head>
+<body>
+<h1>Exercise 6: Arbitrary-Length Chain, With Asynquence</h1>
+<p>Same as Exercise 4, but with asynquence, no reduce needed, just two .map() calls. Open your browser's console (F12) to see the output.</p>
+
+<script src="https://unpkg.com/asynquence@0.10.2/asq.src.js"></script>
+<script>
+  function fakeFetchStat(name, cb) {
+    const delay = 300 + Math.random() * 700;
+    setTimeout(() => cb(`${name} data ready`), delay);
+  }
+
+  function getStat(name) {
+    return ASQ(function (done) {
+      fakeFetchStat(name, done);
+    });
+  }
+
+  function output(text) {
+    console.log(text);
+  }
+
+  const stats = ['inventory', 'shipping', 'payments', 'tax', 'insurance'];
+
+  // 1. .map(getStat) turns the list into a list of sequences (same as before).
+  // 2. A second .map() turns each sequence into a function that prints it,
+  //    so passing them all into one .seq() call runs them one after another.
+  // 3. ASQ().seq(...) with the spread operator runs a list of functions in
+  //    order, whatever the list's length is.
+  // what do we do here?
+</script>
+
+</body>
+</html>
