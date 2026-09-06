@@ -20,6 +20,13 @@ function applyDiscount(cb) {
   }, 300);
 }
 
+function chargeCard(cb) {
+  setTimeout(() => {
+    console.log('Card charged');
+    cb();
+  }, 300);
+}
+
 function renderReceipt() {
   setTimeout(() => {
     console.log('Receipt shown');
@@ -29,7 +36,9 @@ function renderReceipt() {
 // Nested (the "pyramid" everyone points at)
 loadCart(function () {
   applyDiscount(function () {
-    renderReceipt();
+    chargeCard(function () {
+      renderReceipt();
+    });
   });
 });
 
@@ -39,6 +48,10 @@ function afterLoad() {
 }
 
 function afterDiscount() {
+  chargeCard(afterCharge);
+}
+
+function afterCharge() {
   renderReceipt();
 }
 
