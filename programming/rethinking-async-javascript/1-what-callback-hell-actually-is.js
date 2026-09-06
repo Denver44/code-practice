@@ -6,53 +6,30 @@ setTimeout(afterTimer, 1000);
 
 // ---
 
-function loadCart(cb) {
-  setTimeout(() => {
-    console.log('Cart loaded');
-    cb();
-  }, 300);
-}
-
-function applyDiscount(cb) {
-  setTimeout(() => {
-    console.log('Discount applied');
-    cb();
-  }, 300);
-}
-
-function chargeCard(cb) {
-  setTimeout(() => {
-    console.log('Card charged');
-    cb();
-  }, 300);
-}
-
-function renderReceipt() {
-  setTimeout(() => {
-    console.log('Receipt shown');
-  }, 300);
-}
-
 // Nested (the "pyramid" everyone points at)
-loadCart(function () {
-  applyDiscount(function () {
-    chargeCard(function () {
-      renderReceipt();
-    });
-  });
-});
+setTimeout(() => {
+  console.log('Step 1');
+  setTimeout(() => {
+    console.log('Step 2');
+    setTimeout(() => {
+      console.log('Step 3');
+    }, 300);
+  }, 300);
+}, 300);
 
-// Continuation-passing style: same problems, no pyramid
-function afterLoad() {
-  applyDiscount(afterDiscount);
+// Continuation-passing style: same behavior, no pyramid
+function step1() {
+  console.log('Step 1');
+  setTimeout(step2, 300);
 }
 
-function afterDiscount() {
-  chargeCard(afterCharge);
+function step2() {
+  console.log('Step 2');
+  setTimeout(step3, 300);
 }
 
-function afterCharge() {
-  renderReceipt();
+function step3() {
+  console.log('Step 3');
 }
 
-loadCart(afterLoad);
+setTimeout(step1, 300);
