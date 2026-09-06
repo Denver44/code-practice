@@ -6,36 +6,40 @@ setTimeout(afterTimer, 1000);
 
 // ---
 
-function fakeAsync(label, cb) {
-  setTimeout(() => cb(label), 300);
-}
-
 function loadCart(cb) {
-  fakeAsync(['shirt', 'shoes'], cb);
+  setTimeout(() => {
+    console.log('Cart loaded');
+    cb();
+  }, 300);
 }
 
-function applyDiscount(items, cb) {
-  fakeAsync([...items, 'discount applied'], cb);
+function applyDiscount(cb) {
+  setTimeout(() => {
+    console.log('Discount applied');
+    cb();
+  }, 300);
 }
 
-function renderReceipt(items) {
-  console.log('Receipt:', items);
+function renderReceipt() {
+  setTimeout(() => {
+    console.log('Receipt shown');
+  }, 300);
 }
 
 // Nested (the "pyramid" everyone points at)
-loadCart(function (items) {
-  applyDiscount(items, function (discountedItems) {
-    renderReceipt(discountedItems);
+loadCart(function () {
+  applyDiscount(function () {
+    renderReceipt();
   });
 });
 
 // Continuation-passing style: same problems, no pyramid
-function afterLoad(items) {
-  applyDiscount(items, afterDiscount);
+function afterLoad() {
+  applyDiscount(afterDiscount);
 }
 
-function afterDiscount(discountedItems) {
-  renderReceipt(discountedItems);
+function afterDiscount() {
+  renderReceipt();
 }
 
 loadCart(afterLoad);
