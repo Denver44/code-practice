@@ -1,0 +1,1 @@
+warehouseCount -= 20;

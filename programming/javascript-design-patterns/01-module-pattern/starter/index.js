@@ -1,7 +1,8 @@
-// Challenge: everything below lives in one file, and warehouseCount
-// is reachable from anywhere that loads this script (try it: run this
-// file, then require it a second time somewhere else in the same process
-// and watch warehouseCount keep the value from the first run).
+// Challenge: everything below lives in one plain file, so warehouseCount
+// is just a regular variable. Any function added to this same file,
+// including ones that have nothing to do with stock, can read or
+// overwrite it directly, the same way sibling <script> tags in a browser
+// can read or overwrite each other's top-level `var` declarations.
 //
 // Your job: split this into two files, stock.js and index.js, using
 // export/import, so that warehouseCount is private to stock.js and only
